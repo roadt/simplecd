@@ -4,9 +4,9 @@ from time import time,sleep
 
 path = os.path.dirname(os.path.realpath(sys.argv[0]))
 
-proxies = {'http':'http://obmem.com:30000'}
-proxy_support = urllib2.ProxyHandler(proxies)
-opener = urllib2.build_opener(proxy_support, urllib2.HTTPHandler)
+#proxies = {'http':'http://obmem.com:30000'}
+#proxy_support = urllib2.ProxyHandler(proxies)
+#opener = urllib2.build_opener(proxy_support, urllib2.HTTPHandler)
 
 #functions
 def report(blocknum, bs, size, t):
