@@ -1,0 +1,77 @@
+$def with (vcp)
+$code
+    vc=vcp[0]
+    pages=vcp[1]
+    arg=vcp[2]
+    if vcp[3] == None:
+        q=''
+    else:
+        q=vcp[3]
+    num=vcp[4]
+
+<HTML>
+	<HEAD>
+		<title>SimpleCD|精简版的VeryCD</title>
+		<META NAME="keywords" CONTENT="VeryCD,精简版,emule,电骡,下载">
+		<META NAME="description" content="SimpleCD专注于为VeryCD做简单的备份，同时也提供了基本的搜索列表功能">
+		<LINK href="/static/main_02.css" type="text/css" rel="stylesheet">
+	</HEAD>
+
+	<BODY>
+		<table cellpadding=0 cellspacing=0 align=center width=760>
+			<tr><td width=218><a href=/><img src=/static/simplecd.png height=68></a>
+				<td valign=middle>
+				怕了国内那些大爷了，所以为VeryCD做了个简单备份，名为<a href="/static/about.html">SimpleCD</a>&nbsp;<br>
+	                <form id=search method=get action=/>
+					<INPUT type=text name=q size=45 value="$q">
+						<INPUT type=submit value="SimpleCD搜索">
+					</form>
+				</td></tr>
+		</table>
+		<div width=760 align=center>
+			<h3 style="color:blue">爬虫进度:$num/160000</h3>
+		</div>
+		<div width=760 align=center>
+			<iframe src="/static/hot.html" id="iframe1" width=760 height=180 frameborder=0 scrolling=no></iframe> 
+		</div>
+		<table cellpadding=0 cellspacing=0 align=center width=760>
+			<tr>
+				<td class=bt width=338> &nbsp;&nbsp;&nbsp;<b>最近更新的资源</b></td>
+				<td class=bt>摘要</td>
+				<td class=bt width=128>更新时间</td>
+				<td class=bt width=78>VeryCD原链</td>
+			</tr>
+			$for r in vc:
+				<tr bgcolor=#ffffff height=30>
+					<td class=xt valign=middle><a href="/?id=$r.verycdid">$:r.title</a></td>
+					<td class=xt>$:r.brief</td>
+					<td class=xt>$:r.updtime</td>
+					<td class=xt><a href="http://www.verycd.com/topics/$r.verycdid/">Topic$r.verycdid</a></td>
+				</tr>
+		</table>
+		<table cellpadding=0 cellspacing=0 align=center width=760>
+			<tr bgcolor=#ffffff height=30 align=right>
+				<td>
+				<font size=4>
+					<a href="$arg=1">首页</a>
+					<a href="$arg=$pages[0]">上一页</a>
+					$for p in pages[3:]:
+						<a href="$arg=$p">$p</a>
+					<a href="$arg=$pages[1]">下一页</a>
+					<a href="$arg=$pages[2]">末页</a>
+				</font>
+				</td>
+			</tr>
+		</table>
+		<script type="text/javascript">
+			  var _gaq = _gaq || [];
+			  _gaq.push(['_setAccount', 'UA-10627564-5']);
+			  _gaq.push(['_trackPageview']);
+			  (function() {
+			    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga);
+			  })();
+		</script>
+	</BODY>
+</HTML>
