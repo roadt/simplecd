@@ -1,0 +1,69 @@
+$def with (r)
+
+$code:
+    rec = r[0]
+    fl = r[1]
+    id = r[2]
+
+    def format(content):
+        return content.replace('\n','<br>')
+    def emlink(ed2k):
+        links = ed2k.split('`')
+        rtn = '<table border=1><tr><td><b>Emule Links</b> <a href="?id='+id+'&download=all">download all</a></td><td><b>Subtitles</b></td></tr>'
+        i = 0
+        while i+1 < len(links):
+            if links[i].startswith('ed2k') and links[i+1].startswith('ed2k'):
+                rtn += '<tr><td>&nbsp;<a href="%s">%s</a>&nbsp;</td><td><a href="%s">Download</a></td></tr>'\
+                       % (links[i],links[i+2],links[i+1])
+                i += 3
+            else:
+                rtn += '<tr><td>&nbsp;<a href="%s">%s</a>&nbsp;</td><td><a href="http://shooter.cn">Search</a></td></tr>' % (links[i],links[i+1])
+                i += 2
+        return rtn
+
+<HTML>
+	<HEAD>
+		<title>SimpleCD|精简版的VeryCD</title>
+		<META NAME="keywords" CONTENT="VeryCD,精简版,emule,电骡,下载">
+		<META NAME="description" content="SimpleCD专注于为VeryCD做简单的备份，同时也提供了基本的搜索列表功能">
+		<LINK href="/static/main_02.css" type="text/css" rel="stylesheet">
+	</HEAD>
+
+$if fl:
+	<h3>复制下列链接，在emule中选择新建任务即可</h3>
+	$:fl
+$else:
+	<BODY>
+		<table cellpadding=0 cellspacing=0 align=center width=760>
+			<tr><td width=218><a href=/><img src=/static/simplecd.png height=68></a>
+				<td valign=middle>
+				&nbsp;
+	                <form id=search method=get action=/>
+					<INPUT type=text name=q size=45>
+						<INPUT type=submit value="SimpleCD搜索">
+					</form>
+				</td></tr>
+		</table>
+		<table cellpadding=0 cellspacing=0 align=center width=760>
+			<tr><td class=bt><b>VeryCD Topic ID:</b> $:rec['verycdid']</td></tr>
+			<tr><td><font size="4"><b>$:rec['title']</b></font>&nbsp;|&nbsp;<a href="http://www.verycd.com/topics/$:rec['verycdid']">from VeryCD</a></td></tr>
+			<tr><td><b>状态：</b>$:rec['status']</td></td>
+			<tr><td><b>摘要：</b>$:rec['brief']</td></tr>
+			<tr><td><b>发布时间：</b>$:rec['pubtime']</td></tr>
+			<tr><td><b>更新时间：</b>$:rec['updtime']</td></tr>
+			<tr><td><b>类别：</b>$:rec['category1'],$:rec['category2']</td></tr>
+			<tr><td>$:emlink(rec['ed2k'])</td></tr>
+			<tr><td>$:format(rec['content'])</td></tr>
+		</table>
+		<script type="text/javascript">
+			  var _gaq = _gaq || [];
+			  _gaq.push(['_setAccount', 'UA-10627564-5']);
+			  _gaq.push(['_trackPageview']);
+			  (function() {
+			    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga);
+			  })();
+		</script>
+	<BODY>
+</HTML>
