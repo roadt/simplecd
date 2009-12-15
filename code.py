@@ -1,5 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+#
+# code.py: based on web.py
+#
+# author: observer
+# email: jingchaohu@gmail.com
+# blog: http://obmem.com
+# last edit @ 2009.12.16
 import web
 import sqlite3
 

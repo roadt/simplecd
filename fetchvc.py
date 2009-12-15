@@ -1,5 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+#
+# fetchvc.py fetch resources from verycd
+#
+# author: observer
+# email: jingchaohu@gmail.com
+# blog: http://obmem.com
+# last edit @ 2009.12.16
 import urllib
 import re
 import sqlite3

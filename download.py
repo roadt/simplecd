@@ -1,10 +1,19 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+# download.py: download with report
+#
+# author: observer
+# email: jingchaohu@gmail.com
+# blog: http://obmem.com
+# last edit @ 2009.12.16
 import os,sys
 import urllib2
 from time import time,sleep
 
 path = os.path.dirname(os.path.realpath(sys.argv[0]))
 
-#proxies = {'http':'http://obmem.com:30000'}
+#proxies = {'http':'http://proxyaddress:port'}
 #proxy_support = urllib2.ProxyHandler(proxies)
 #opener = urllib2.build_opener(proxy_support, urllib2.HTTPHandler)
 #urllib2.install_opener(opener)
