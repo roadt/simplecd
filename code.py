@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import web
+import sqlite3
 
 web.config.debug = False
 

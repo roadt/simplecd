@@ -4,9 +4,10 @@ from time import time,sleep
 
 path = os.path.dirname(os.path.realpath(sys.argv[0]))
 
-proxies = {'http':'http://obmem.com:30000'}
-proxy_support = urllib2.ProxyHandler(proxies)
-opener = urllib2.build_opener(proxy_support, urllib2.HTTPHandler)
+#proxies = {'http':'http://obmem.com:30000'}
+#proxy_support = urllib2.ProxyHandler(proxies)
+#opener = urllib2.build_opener(proxy_support, urllib2.HTTPHandler)
+#urllib2.install_opener(opener)
 
 #functions
 def report(blocknum, bs, size, t):
@@ -17,8 +18,6 @@ def report(blocknum, bs, size, t):
         print '%10s' % (str(blocknum*bs)) + '/' + str(size) + 'downloaded | ' + str(percent) + '% Speed =' + '%5.2f'%(bs/t/1024) + 'KB/s'
     
 def httpfetch(url, headers={}, reporthook=report, postData=None, report=True):
-    urllib2.install_opener(opener)
-
     ok = False
     for _ in range(10):
         try:

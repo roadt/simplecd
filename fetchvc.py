@@ -188,7 +188,7 @@ def fetch(id,conn=conn,debug=False):
 
 	return pubtime[1]
 
-def dbcreate(conn):
+def dbcreate():
 	c = conn.cursor()
 	c.execute('''create table verycd(
 		verycdid integer primary key,
