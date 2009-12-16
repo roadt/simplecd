@@ -43,6 +43,7 @@ class MyDaemon(Daemon):
 		conn.text_factory = str
 		while True:
 			try:
+				#check searchqueue every 10 secs
 				taskqueue = open(self.path+'/searchqueue','r').readlines()
 				print taskqueue,time.mktime(time.gmtime()),time.mktime(time.gmtime())%900
 				open(self.path+'/searchqueue','w').write('')
@@ -57,7 +58,8 @@ class MyDaemon(Daemon):
 						self.q.put(topic)
 				if taskqueue == []:
 					time.sleep(10)
-				if time.mktime(time.gmtime())%900<10:
+				# read feed every 900 secs
+				if time.mktime(time.gmtime())%600<10:
 					url = 'http://www.verycd.com/sto/feed'
 					print 'fetching feed ...'
 					feeds = httpfetch(url)
@@ -67,6 +69,20 @@ class MyDaemon(Daemon):
 					now = time.mktime(time.gmtime())
 					for topic in topics:
 						self.q.put(topic)
+				# read hot everyday at gmt 19:00
+				timeofday =  time.mktime(time.gmtime())%86400
+				if timeofday>68400 and timeofday < 68410:
+					url = 'http://www.verycd.com/'
+					print 'fetching homepage ...'
+					home = httpfetch(url)
+					hotzone = re.compile(r'热门资源.*?</dl>',re.DOTALL).search(home).group()
+					hot = re.compile(r'<a href="/topics/(\d+)/"[^>]*>(《.*?》)[^<]*</a>',re.DOTALL).findall(hotzone)
+					html = '<h2 style="color:red">每日热门资源</h2>\n'
+					for topic in hot:
+						print 'fetching hot topic',topic[0],'...'
+						self.q.put(topic[0])
+						html += '&nbsp;<a target="_parent" href="/?id=%s">%s</a>&nbsp;\n' % topic
+					open(self.path+'/static/hot.html','w').write(html)
 			except:
 				time.sleep(10)
 				continue
