@@ -22,7 +22,7 @@ path = os.path.dirname(os.path.realpath(sys.argv[0]))
 conn = sqlite3.connect(path+'/verycd.sqlite3.db')
 conn.text_factory = str
 q = Queue()
-MAXC = 8
+MAXC = 18
 
 def thread_fetch():
 	conn = sqlite3.connect(path+'/verycd.sqlite3.db')

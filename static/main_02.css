@@ -6,6 +6,10 @@ a:link {color: blue; text-decoration: none }
 a:active {color: blue; text-decoration: underline}
 a:visited {color: #c04dc0; text-decoration: none}
 a:hover {color: blue; text-decoration: underline;position:relative;left:1px;top:1px}
+a.cat:link {color: red; text-decoration: none }
+a.cat:active {color: red; text-decoration: none}
+a.cat:visited {color: red; text-decoration: none}
+a.cat:hover {color: blue; text-decoration: underline;position:relative;left:1px;top:1px}
 a.tt:link {color: black; text-decoration: none}
 a.tt:active {color: blue; text-decoration: underline}
 a.tt:visited {color: black; text-decoration: none;}
