@@ -28,6 +28,14 @@ $code
 					</form>
 				</td></tr>
 		</table>
+		$if q != '':
+			<table cellpadding=0 cellspacing=0 align=center width=760>
+				对搜索结果不满意？VeryCD上有更多结果？试试
+				<form id=search method=get action=/>
+					<input type=text name=qa size=10 value="$q">
+					<input type=sbmit value="深度搜索">
+				</form>
+			</table>
 		<div width=760 align=center>
 			<iframe src="/static/hot.html" id="iframe1" width=760 height=180 frameborder=0 scrolling=no></iframe> 
 		</div>

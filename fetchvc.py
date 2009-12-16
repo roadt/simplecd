@@ -34,6 +34,10 @@ def thread_fetch():
 
 def search(keyword,full=True):
 	'''search verycd, fetch search results'''
+
+	searchlog = path+'/search.log'
+	open(searchlog,'a').write('\n'+keyword+'\n')
+
 	url = 'http://www.verycd.com/search/folders/'+keyword
 	print 'fetching search results ...'
 	res = httpfetch(url)
@@ -46,6 +50,7 @@ def search(keyword,full=True):
 	print topics
 	if topics:
 		for topic in topics:
+			open(searchlog,'a').write(topic+',')
 			q.put(topic)
 	if full and links:
 		for key in links:
@@ -300,5 +305,3 @@ if __name__=='__main__':
 
 	# wait all threads done
 	q.join()
-
-

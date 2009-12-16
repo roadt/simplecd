@@ -9,6 +9,7 @@
 # last edit @ 2009.12.16
 import web
 import sqlite3
+from simplevc import addsearch
 
 web.config.debug = False
 
@@ -25,7 +26,7 @@ app = web.application(urls, globals())
 
 class index:
 	def GET(self):
-		i = web.input(id=None,page='1',q=None,download=None)
+		i = web.input(id=None,page='1',q=None,download=None,qa=None)
 		if i.id:
 			myvar = dict(id=i.id)
 			rec = db.select('verycd',vars=myvar,where="verycdid=$id")
@@ -38,7 +39,11 @@ class index:
 				return render.id([r,fl,str(r['verycdid'])])
 			return render.error(404)
 		else:
-			if not i.q:
+			if i.qa:
+				qa = '+'.join(i.qa.split(' '))
+				addsearch(qa)
+				return "已经加入深度搜索，请稍候再尝试搜索"
+			elif not i.q:
 				vc = db.select('verycd',order='updtime DESC',limit=20,offset=20*(int(i.page)-1))
 				num = db.select('verycd',what="count(*) as count")[0].count
 				arg = '/?page'
