@@ -265,12 +265,13 @@ def usage():
   python fetchvc.py hot
   python fetchvc.py update #update first 20 pages, run on a daily basis'''
 
+#initialize thread pool
+for i in range(MAXC):
+	t = Thread(target=thread_fetch)
+	t.setDaemon(True)
+	t.start()
+
 if __name__=='__main__':
-	#initialize thread pool
-	for i in range(MAXC):
-		t = Thread(target=thread_fetch)
-		t.setDaemon(True)
-		t.start()
 
 	if len(sys.argv) == 1:
 		usage()

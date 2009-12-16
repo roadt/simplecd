@@ -65,6 +65,7 @@ def httpfetch(url, headers={}, reporthook=report, postData=None, report=True):
             open(path+'/errors','a').write(url+'\n')
             return ''
         if block == "":
+            print '...',url,'downloaded' 
             break
         rawdata += block
         read += len(block)
@@ -77,7 +78,6 @@ def httpfetch(url, headers={}, reporthook=report, postData=None, report=True):
     if size >= 0 and read < size:
         raise ContentTooShortError("retrieval incomplete: got only %i out "
                                     "of %i bytes" % (read, size), result)
-
     return rawdata
     
 if __name__ == '__main__':    

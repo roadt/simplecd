@@ -7,11 +7,13 @@
 # email: jingchaohu@gmail.com
 # blog: http://obmem.com
 # last edit @ 2009.12.16
+import os,sys
 import web
 import sqlite3
-from simplevc import addsearch
+import fetchvc
+#web.config.debug = False
 
-web.config.debug = False
+path = os.path.dirname(os.path.realpath(sys.argv[0]))
 
 db = web.database(dbn='sqlite', db='verycd.sqlite3.db')
 
@@ -41,8 +43,8 @@ class index:
 		else:
 			if i.qa:
 				qa = '+'.join(i.qa.split(' '))
-				addsearch(qa)
-				return "已经加入深度搜索，请稍候再尝试搜索"
+				open(path+'/searchqueue','a').write(qa.encode('utf-8')+'\n')
+				return render.fin(qa)
 			elif not i.q:
 				vc = db.select('verycd',order='updtime DESC',limit=20,offset=20*(int(i.page)-1))
 				num = db.select('verycd',what="count(*) as count")[0].count
