@@ -59,7 +59,7 @@ class MyDaemon(Daemon):
 				if taskqueue == []:
 					time.sleep(10)
 				# read feed every 900 secs
-				if time.mktime(time.gmtime())%600<10:
+				if time.mktime(time.gmtime())%1000<10:
 					url = 'http://www.verycd.com/sto/feed'
 					print 'fetching feed ...'
 					feeds = httpfetch(url)
