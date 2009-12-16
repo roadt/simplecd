@@ -20,6 +20,8 @@ path = os.path.dirname(os.path.realpath(sys.argv[0]))
 
 #functions
 def report(blocknum, bs, size, t):
+    if t == 0:
+        t = 1
     if size == -1:
         print '%10s' % (str(blocknum*bs)) + ' downloaded | Speed =' + '%5.2f' % (bs/t/1024) + 'KB/s'
     else:
