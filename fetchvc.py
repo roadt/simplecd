@@ -9,25 +9,22 @@
 # last edit @ 2009.12.16
 import urllib
 import re
-import sqlite3
 import MySQLdb
 import time
 import os,sys
 
 from threading import Thread
 from Queue import Queue
-
 from download import httpfetch
+from conf import *
 
 path = os.path.dirname(os.path.realpath(sys.argv[0]))
-conn = sqlite3.connect(path+'/verycd.sqlite3.db')
-conn.text_factory = str
+conn = MySQLdb.connect(user=dbuser,passwd=dbpw,db=dbname)
 q = Queue()
-MAXC = 18
+MAXC = 8
 
 def thread_fetch():
-	conn = sqlite3.connect(path+'/verycd.sqlite3.db')
-	conn.text_factory = str
+	conn = MySQLdb.connect(user=dbuser,passwd=dbpw,db=dbname)
 	while True:
 		topic = q.get()
 		fetch(topic,conn)
@@ -204,7 +201,7 @@ def fetch(id,conn=conn,debug=False):
 
 def dbcreate():
 	c = conn.cursor()
-	c.execute('''create table verycd(
+	c.execute('''create table verycd2(
 		verycdid integer primary key,
 		title text,
 		status text,
@@ -214,31 +211,36 @@ def dbcreate():
 		category1 text,
 		category2 text,
 		ed2k text,
-		content text
+	)''')
+	c.execute('''create table verycd2c(
+		verycdid integer primary key,
+		content text,
 	)''')
 	conn.commit()
 	c.close()
 
 def dbinsert(id,title,status,brief,pubtime,category,ed2k,content,conn):
 	c = conn.cursor()
-	c.execute('insert into verycd values(?,?,?,?,?,?,?,?,?,?)',\
+	c.execute('insert into verycd2 values(%s,"%s","%s","%s","%s","%s","%s","%s","%s")'%
 		(id,title,status,brief,pubtime[0],pubtime[1],category[0],category[1],\
-		ed2k,content))
+		ed2k))
+	c.execute('insert into verycd2c value(%s,"%s")'%(id,content))
 	conn.commit()
 	c.close()
 
 def dbupdate(id,title,status,brief,pubtime,category,ed2k,content,conn):
 	c = conn.cursor()
-	c.execute('update verycd set verycdid=?,title=?,status=?,brief=?,pubtime=?,\
-		updtime=?,category1=?,category2=?,ed2k=?,content=? where verycdid=?',\
+	c.execute('update verycd2 set verycdid=%s,title="%s",status="%s",brief="%s",pubtime="%s",updtime="%s",category1="%s",category2="%s",ed2k="%s"  where verycdid=%s'%\
 		(id,title,status,brief,pubtime[0],pubtime[1],category[0],category[1],\
-		ed2k,content,id))
+		ed2k,id))
+	c.execute('update verycd2c set verycdid=%s,content="%s" where verycdid=%s'%\
+		(id,content,id))
 	conn.commit()
 	c.close()
 
 def dbfind(id,conn):
 	c = conn.cursor()
-	c.execute('select 1 from verycd where verycdid=?',(id,))
+	c.execute('select 1 from verycd2 where verycdid=%s'%id)
 	c.close()
 	for x in c:
 		if 1 in x:

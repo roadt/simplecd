@@ -13,13 +13,14 @@ from web import form
 import fetchvc
 import time
 import MySQLdb
+from conf import *
 
 #web.config.debug = False
 
 path = os.path.dirname(os.path.realpath(sys.argv[0]))
 
-verycddb = MySQLdb.connect(user='root',passwd='guess8',db='aaa')
-customdb = MySQLdb.connect(user='root',passwd='guess8',db='aaa')
+verycddb = MySQLdb.connect(user=dbuser,passwd=dbpw,db=dbname)
+customdb = MySQLdb.connect(user=dbuser,passwd=dbpw,db=dbname)
 
 urls = (
 	'/', 'index', 
