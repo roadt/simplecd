@@ -45,15 +45,15 @@ $else:
 				</td></tr>
 		</table>
 		<table cellpadding=0 cellspacing=0 align=center width=760>
-			<tr><td class=bt><b>VeryCD Topic ID:</b> $:rec['verycdid']</td></tr>
-			<tr><td><font size="4"><b>$:rec['title']</b></font>&nbsp;|&nbsp;<a href="http://www.verycd.com/topics/$:rec['verycdid']">from VeryCD</a></td></tr>
-			<tr><td><b>状态：</b>$:rec['status']</td></td>
-			<tr><td><b>摘要：</b>$:rec['brief']</td></tr>
-			<tr><td><b>发布时间：</b>$:rec['pubtime']</td></tr>
-			<tr><td><b>更新时间：</b>$:rec['updtime']</td></tr>
-			<tr><td><b>类别：</b>$:rec['category1'],$:rec['category2']</td></tr>
-			<tr><td>$:emlink(rec['ed2k'])</td></tr>
-			<tr><td>$:format(rec['content'])</td></tr>
+			<tr><td class=bt><b>VeryCD Topic ID:</b> $:rec[0]</td></tr>
+			<tr><td><font size="4"><b>$:rec[1]</b></font>&nbsp;|&nbsp;<a href="http://www.verycd.com/topics/$:rec[0]">from VeryCD</a></td></tr>
+			<tr><td><b>状态：</b>$:rec[2]</td></td>
+			<tr><td><b>摘要：</b>$:rec[3]</td></tr>
+			<tr><td><b>发布时间：</b>$:rec[4]</td></tr>
+			<tr><td><b>更新时间：</b>$:rec[6]</td></tr>
+			<tr><td><b>类别：</b>$:rec[6],$:rec[7]</td></tr>
+			<tr><td>$:emlink(rec[8])</td></tr>
+			<tr><td>$:format(rec[10])</td></tr>
 		</table>
 		<script type="text/javascript">
 			  var _gaq = _gaq || [];

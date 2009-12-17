@@ -10,6 +10,7 @@
 import urllib
 import re
 import sqlite3
+import MySQLdb
 import time
 import os,sys
 

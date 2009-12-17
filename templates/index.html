@@ -62,10 +62,10 @@ $code
 			</tr>
 			$for r in vc:
 				<tr bgcolor=#ffffff height=30>
-					<td class=xt valign=middle><a href="/?id=$r.verycdid">$:r.title</a></td>
-					<td class=xt>$:r.brief</td>
-					<td class=xt>$:r.updtime</td>
-					<td class=xt><a href="http://www.verycd.com/topics/$r.verycdid/">Topic$r.verycdid</a></td>
+					<td class=xt valign=middle><a href="/?id=$r[0]">$:r[1]</a></td>
+					<td class=xt>$:r[3]</td>
+					<td class=xt>$:r[5]</td>
+					<td class=xt><a href="http://www.verycd.com/topics/$r[0]/">Topic$r[0]</a></td>
 				</tr>
 		</table>
 		<table cellpadding=0 cellspacing=0 align=center width=760>
