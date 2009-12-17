@@ -163,10 +163,10 @@ def fetch(id,conn=conn,debug=False):
 	category[0] = re.compile(r'<.*?>',re.DOTALL).sub('',category1[0]).strip()
 	category[1] = re.compile(r'<.*?>',re.DOTALL).sub('',category1[1]).strip()
 
-	res2 = re.compile(r'iptcomED2K"><!--eMule.*?<!--eMule end-->',re.DOTALL).findall(res)[0]
+#	res2 = re.compile(r'iptcomED2K"><!--eMule.*?<!--eMule end-->',re.DOTALL).findall(res)[0]
 
-	ed2k = re.compile(r'ed2k="([^"]*)" subtitle_[^=]*="([^"]*)">([^<]*)</a>',re.DOTALL).findall(res2)
-	ed2k.extend( re.compile(r'ed2k="([^"]*)">([^<]*)</a>',re.DOTALL).findall(res2) )
+	ed2k = re.compile(r'ed2k="([^"]*)" (subtitle_[^=]*="[^"]*"[^>]*)>([^<]*)</a>',re.DOTALL).findall(res)
+	ed2k.extend( re.compile(r'ed2k="([^"]*)">([^<]*)</a>',re.DOTALL).findall(res))
 
 	content = re.compile(r'<!--eMule end-->(.*?)<!--Wrap-tail end-->',re.DOTALL).findall(res)
 
