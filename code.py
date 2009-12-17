@@ -62,7 +62,7 @@ class index:
 			for r in rec:
 				fl = None
 				if i.download:
-					links = r[-2].split('`')
+					links = r[8].split('`')
 					links = [ x for x in links if 'ed2k:' in x ]
 					fl = '<br>\n'.join(links)
 				return render.id([r,fl,str(r[0])])

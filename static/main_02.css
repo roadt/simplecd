@@ -27,4 +27,9 @@ h1 {font-size:22px;line-height:180%;margin:0px;padding: 0px;color: #cc0000;}
 p {font-size:10.5pt;line-height:180%;}
 input{font-size:11.5pt;height:25px;}
 div,form,img,ul,li,img{margin:0; padding:0; border:0;}
-table{background-color:#ffffff;} 
+table{background-color:#ffffff;} .ed2kzone{background-color: #9FaFbF;border: 1px solid #CCC;}
+.ed2ktitle{background:#AAA;color:#FFFFFF;font-weight:bold;}
+.ed2ktitle a{color:#888;}
+.ed2kheader{background:#c0d0e0;color:#000000}
+.ed2kitem{background-color: #FFFFFF;}
+.ed2kitemChecked{background-color: #FFFFCC;}

@@ -4,21 +4,37 @@ $code:
     rec = r[0]
     fl = r[1]
     id = r[2]
+    name = 'topic'+id
 
     def format(content):
         return content.replace('\n','<br>')
     def emlink(ed2k):
         links = ed2k.split('`')
-        rtn = '<table border=1><tr><td><b>Emule Links</b> <a href="?id='+id+'&download=all">download all</a></td><td><b>Subtitles</b></td></tr>'
+        rtn = '''<table cellspacing="1" cellpadding="0" border="0" width="760" class="ed2kzone" align="center">
+        <tbody>
+        <tr class="ed2kheader">
+        <td align="center" colspan="4">下面是用户共享的文件列表，推荐使用 <a href="http://www.emule-project.net/home/perl/general.cgi?l=42&rm=download">eMule</a>  进行下载，您可以点击这些文件名进行下载</td>
+        </tr>'''
+
         i = 0
         while i+1 < len(links):
-            if links[i].startswith('ed2k') and links[i+1].startswith('ed2k'):
-                rtn += '<tr><td>&nbsp;<a href="%s">%s</a>&nbsp;</td><td><a href="%s">Download</a></td></tr>'\
-                       % (links[i],links[i+2],links[i+1])
+            if links[i].startswith('ed2k') and 'ed2k:' in links[i+1]:
+                rtn += '''<tr class="ed2kitem">
+                <td width="20"><input type="checkbox" checked="checked" onclick="em_size(''+this.name+'');" value="%s" name="%s"/></td>
+                <td width="640"><a ed2k="%s" href="%s">%s</a></td>
+                <td width="100" name="%ssize"></td></tr>''' % (links[i],name,links[i],links[i],links[i+2],name)
                 i += 3
             else:
-                rtn += '<tr><td>&nbsp;<a href="%s">%s</a>&nbsp;</td><td><a href="http://shooter.cn">Search</a></td></tr>' % (links[i],links[i+1])
+                rtn += '''<tr class="ed2kitem">
+                <td width="20"><input type="checkbox" checked="checked" onclick="em_size(''+this.name+'');" value="%s" name="%s"/></td>
+                <td width="640"><a ed2k="%s" href="%s">%s</a></td>
+                <td width="100" name="%ssize"></td></tr>''' % (links[i],name,links[i],links[i],links[i+1],name)
                 i += 2
+        downall = '/?id='+id+'&download=all'
+        rtn += '''<tr class="ed2kitem">
+        <td width="20"><input type="checkbox" checked="" onclick="checkAll('%s',this.checked)" class="forminput" id="checkall_%s"/></td>
+        <td colspan="1"><input type="button" onclick="download('%s',0,1)" class="filebutton" value="下载选中的文件"/> <input type="button" onclick="copy('%s')" class="filebutton" value="复制选中的链接"/><input type="button" onclick="javascript:window.open('%s');" value="全部链接"></td>
+        <td width="70" id="size_%s"></td></tr></tbody></table>''' % (name,name,name,name,downall,name)
         return rtn
 
 <HTML>
@@ -27,13 +43,14 @@ $code:
 		<META NAME="keywords" CONTENT="VeryCD,精简版,emule,电骡,下载">
 		<META NAME="description" content="SimpleCD专注于为VeryCD做简单的备份，同时也提供了基本的搜索列表功能">
 		<LINK href="/static/main_02.css" type="text/css" rel="stylesheet">
+		<script language="javascript" type="text/javascript" src="/static/common.js"></script> 
 	</HEAD>
 
 $if fl:
 	<h3>复制下列链接，在emule中选择新建任务即可</h3>
 	$:fl
 $else:
-	<BODY>
+	<BODY onload=checkAll("$name",true);em_size("$name")>
 		<table cellpadding=0 cellspacing=0 align=center width=760>
 			<tr><td width=218><a href=/><img src=/static/simplecd.png height=68></a>
 				<td valign=middle>
@@ -52,8 +69,11 @@ $else:
 			<tr><td><b>发布时间：</b>$:rec[4]</td></tr>
 			<tr><td><b>更新时间：</b>$:rec[6]</td></tr>
 			<tr><td><b>类别：</b>$:rec[6],$:rec[7]</td></tr>
-			<tr><td>$:emlink(rec[8])</td></tr>
-			<tr><td>$:format(rec[10])</td></tr>
+
+		</table>
+		$:emlink(rec[8])
+		<table align=center width=760 border=1>
+		<tr><td>$:format(rec[10])</td></tr>
 		</table>
 		<script type="text/javascript">
 			  var _gaq = _gaq || [];
