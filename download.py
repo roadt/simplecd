@@ -18,20 +18,20 @@ islogin = False
 isproxy = False
 
 def useproxy(proxy='http://localhost:3128'):
-    proxies = {'http':proxy}
-    proxy_support = urllib2.ProxyHandler(proxies)
-    opener = urllib2.build_opener(proxy_support, urllib2.HTTPHandler)
-    urllib2.install_opener(opener)
-    global isproxy
+#    proxies = {'http':proxy}
+#    proxy_support = urllib2.ProxyHandler(proxies)
+#    opener = urllib2.build_opener(proxy_support, urllib2.HTTPHandler)
+#    urllib2.install_opener(opener)
+#    global isproxy
     isproxy = True
 
 def login():
     print 'try to login...'
-    proxies = {'http':'http://localhost:3128'}
-    proxy_support = urllib2.ProxyHandler(proxies)
+#    proxies = {'http':'http://localhost:3128'}
+#    proxy_support = urllib2.ProxyHandler(proxies)
     cookie=cookielib.CookieJar()
-    opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie), urllib2.HTTPHandler,proxy_support)
-#    opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie), urllib2.HTTPHandler)
+#    opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie), urllib2.HTTPHandler,proxy_support)
+    opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie), urllib2.HTTPHandler)
     urllib2.install_opener(opener)
 
     print '...getting login form...'
