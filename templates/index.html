@@ -17,16 +17,27 @@ $code
 <HTML>
 	<HEAD>
 		<title>SimpleCD|精简版的VeryCD</title>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 		<META NAME="keywords" CONTENT="VeryCD,精简版,emule,电骡,下载">
 		<META NAME="description" content="SimpleCD专注于为VeryCD做简单的备份，同时也提供了基本的搜索列表功能">
 		<LINK href="/static/main_02.css" type="text/css" rel="stylesheet">
 	</HEAD>
 
 	<BODY>
+		<table cellpadding=0 cellspacing=1 align=center width=760>
+			<tr><td>
+				<a href="/static/tutorial.html" target="_blank">本站源码</a>&nbsp;|&nbsp;
+				<a href="/bbs/viewthread.php?tid=26&page=1&extra=#pid74" target="_blank">全站html打包下载</a>&nbsp;|&nbsp;
+				<a href="/bbs/index.php" target="_blank">论坛</a>&nbsp;|&nbsp;
+				<a href="/feed" target="_blank">订阅更新</a>&nbsp;|&nbsp;
+				<a href="/bbs/forumdisplay.php?fid=3" >报告错误</a>&nbsp;|&nbsp;
+				<a href="/static/about.html" target="_blank">关于</a>
+			</td></tr>
+		</table>
 		<table cellpadding=0 cellspacing=0 align=center width=760>
 			<tr><td width=218><a href=/><img src=/static/simplecd.png height=68></a></td>
 				<td valign=middle>
-				怕了国内那些大爷了，所以为VeryCD做了个简单备份，名为<a href="/static/about.html">SimpleCD</a>&nbsp;<br>
+				怕了国内那些大爷了，所以为VeryCD做了个简单备份</a>&nbsp;<br>
 	                <form id=search method=get action=/>
 						<INPUT type=text name=q size=30 value="$q">
 						$if cat != '':
@@ -37,7 +48,7 @@ $code
 		</table>
 		$if q == '':
 			<table cellpadding=0 cellspacing=0 align=center width=760>
-			<tr><td style="font-size:12px">
+			<tr><td>
 			$:hot
 			</td></tr>
 			</table>
@@ -49,7 +60,7 @@ $code
 				$if cat=='':</b>
 				$for catname in ['电影','剧集','音乐','游戏','动漫','综艺','软件','资料']:
 					$if cat==catname.decode('utf-8'):<b>
-					<a class=cat href="/?q=$q&cat=$catname&page=$pages[0]">$catname</a>
+					<a class=cat href="/?q=$q&cat=$catname&page=1">$catname</a>
 					$if cat==catname.decode('utf-8'):</b>
 			</td></tr>
 		</table>
@@ -62,10 +73,10 @@ $code
 			</tr>
 			$for r in vc:
 				<tr bgcolor=#ffffff height=30>
-					<td class=xt valign=middle><a href="/?id=$r[0]">$:r[1]</a></td>
-					<td class=xt>$:r[3]</td>
-					<td class=xt>$:r[5]</td>
-					<td class=xt><a href="http://www.verycd.com/topics/$r[0]/">Topic$r[0]</a></td>
+					<td class=xt valign=middle><a href="/?id=$r.verycdid">$:r.title</a></td>
+					<td class=xt>$:r.brief</td>
+					<td class=xt>$:r.updtime</td>
+					<td class=xt><a href="http://www.verycd.com/topics/$r.verycdid/">Topic$r.verycdid</a></td>
 				</tr>
 		</table>
 		<table cellpadding=0 cellspacing=0 align=center width=760>

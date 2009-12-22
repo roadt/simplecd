@@ -33,3 +33,12 @@ table{background-color:#ffffff;} .ed2kzone{background-color: #9FaFbF;border: 1p
 .ed2kheader{background:#c0d0e0;color:#000000}
 .ed2kitem{background-color: #FFFFFF;}
 .ed2kitemChecked{background-color: #FFFFCC;}
+#popupcontent{
+position: relative;
+visibility: hidden;
+border:1px solid #CCC;
+background-color:#F9F9F9;
+border:1px solid #333;
+padding:5px;
+overflow:scroll;
+}

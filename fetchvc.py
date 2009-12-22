@@ -6,25 +6,27 @@
 # author: observer
 # email: jingchaohu@gmail.com
 # blog: http://obmem.com
-# last edit @ 2009.12.16
+# last edit @ 2009.12.23
 import urllib
 import re
-import MySQLdb
+import sqlite3
 import time
 import os,sys
 
 from threading import Thread
 from Queue import Queue
+
 from download import httpfetch
-from conf import *
 
 path = os.path.dirname(os.path.realpath(sys.argv[0]))
-conn = MySQLdb.connect(user=dbuser,passwd=dbpw,db=dbname)
+conn = sqlite3.connect(path+'/verycd.sqlite3.db')
+conn.text_factory = str
 q = Queue()
 MAXC = 8
 
 def thread_fetch():
-	conn = MySQLdb.connect(user=dbuser,passwd=dbpw,db=dbname)
+	conn = sqlite3.connect(path+'/verycd.sqlite3.db')
+	conn.text_factory = str
 	while True:
 		topic = q.get()
 		fetch(topic,conn)
@@ -68,6 +70,34 @@ def hot():
 		q.put(topic[0])
 		html += '&nbsp;<a target="_parent" href="/?id=%s">%s</a>&nbsp;\n' % topic
 	open(path+'/static/hot.html','w').write(html)
+
+def normal(pages):
+	'''fetch normal res that need login'''
+	if '-' in pages:
+		(f,t)=[ int(x) for x in pages.split('-') ]
+	else:
+		f = t = int(pages)
+	for page in range(f,t+1):
+		url = 'http://www.verycd.com/orz/page%d?stat=normal' % page
+		idx = httpfetch(url,needlogin=True)
+		ids = re.compile(r'/topics/(\d+)',re.DOTALL).findall(idx)
+		print ids[0]
+		for id in ids:
+			q.put(id)
+
+def request(pages):
+	'''fetch request res that need login'''
+	if '-' in pages:
+		(f,t)=[ int(x) for x in pages.split('-') ]
+	else:
+		f = t = int(pages)
+	for page in range(f,t+1):
+		url = 'http://www.verycd.com/orz/page%d?stat=request' % page
+		idx = httpfetch(url,needlogin=True)
+		ids = re.compile(r'/topics/(\d+)',re.DOTALL).findall(idx)
+		print ids[0]
+		for id in ids:
+			q.put(id)
 
 def feed():
 	''' read verycd feed and keep update very 30 min '''
@@ -150,23 +180,29 @@ def fetch(id,conn=conn,debug=False):
 			return fetch(id,conn)
 	abstract = abstract[0]
     
-
-	title = re.compile(r'<h1>(.*?)</h1>',re.DOTALL).findall(abstract)[0]
-	status = re.compile(r'"requestWords">(.*?)<',re.DOTALL).search(abstract).group(1)
-	brief = re.compile(r'"font-weight:normal"><span>(.*?)</td>',re.DOTALL).search(abstract).group(1)
-	brief = re.compile(r'<.*?>',re.DOTALL).sub('',brief).strip()
-	pubtime = re.compile(r'"date-time">(.*?)</span>.*?"date-time">(.*?)</span>',re.DOTALL).findall(abstract)[0]
-	category1 = re.compile(r'分类.*?<td>(.*?)&nbsp;&nbsp;(.*?)&nbsp;&nbsp;',re.DOTALL).findall(abstract)[0]
-	category = ['','']
-	category[0] = re.compile(r'<.*?>',re.DOTALL).sub('',category1[0]).strip()
-	category[1] = re.compile(r'<.*?>',re.DOTALL).sub('',category1[1]).strip()
-
-#	res2 = re.compile(r'iptcomED2K"><!--eMule.*?<!--eMule end-->',re.DOTALL).findall(res)[0]
-
-	ed2k = re.compile(r'ed2k="([^"]*)" (subtitle_[^=]*="[^"]*"[^>]*)>([^<]*)</a>',re.DOTALL).findall(res)
-	ed2k.extend( re.compile(r'ed2k="([^"]*)">([^<]*)</a>',re.DOTALL).findall(res))
-
-	content = re.compile(r'<!--eMule end-->(.*?)<!--Wrap-tail end-->',re.DOTALL).findall(res)
+	title = re.compile(r'<h1>(.*?)</h1>',re.DOTALL).findall(abstract)
+	if title:
+		title=title[0]
+	else:
+		return
+	try:
+		status = re.compile(r'"requestWords">(.*?)<',re.DOTALL).search(abstract).group(1)
+		brief = re.compile(r'"font-weight:normal"><span>(.*?)</td>',re.DOTALL).search(abstract).group(1)
+		brief = re.compile(r'<.*?>',re.DOTALL).sub('',brief).strip()
+		pubtime = re.compile(r'"date-time">(.*?)</span>.*?"date-time">(.*?)</span>',re.DOTALL).findall(abstract)[0]
+		category1 = re.compile(r'分类.*?<td>(.*?)&nbsp;&nbsp;(.*?)&nbsp;&nbsp;',re.DOTALL).findall(abstract)[0]
+		category = ['','']
+		category[0] = re.compile(r'<.*?>',re.DOTALL).sub('',category1[0]).strip()
+		category[1] = re.compile(r'<.*?>',re.DOTALL).sub('',category1[1]).strip()
+	
+#		res2 = re.compile(r'iptcomED2K"><!--eMule.*?<!--eMule end-->',re.DOTALL).findall(res)[0]
+	
+		ed2k = re.compile(r'ed2k="([^"]*)" (subtitle_[^=]*="[^"]*"[^>]*)>([^<]*)</a>',re.DOTALL).findall(res)
+		ed2k.extend( re.compile(r'ed2k="([^"]*)">([^<]*)</a>',re.DOTALL).findall(res) )
+	
+		content = re.compile(r'<!--eMule end-->(.*?)<!--Wrap-tail end-->',re.DOTALL).findall(res)
+	except:
+		return
 
 	if content:
 		content = content[0]
@@ -191,17 +227,24 @@ def fetch(id,conn=conn,debug=False):
 	ed2kstr = ''
 	for x in ed2k:
 		ed2kstr += '`'.join(x)+'`'
-
-	if not dbfind(id,conn):
-		dbinsert(id,title,status,brief,pubtime,category,ed2kstr,content,conn)
-	else:
-		dbupdate(id,title,status,brief,pubtime,category,ed2kstr,content,conn)
+	tries=0
+	while tries<3:
+		try:
+			if not dbfind(id,conn):
+				dbinsert(id,title,status,brief,pubtime,category,ed2kstr,content,conn)
+			else:
+				dbupdate(id,title,status,brief,pubtime,category,ed2kstr,content,conn)
+			break;
+		except:
+			tries += 1;
+			time.sleep(5);			
+			continue;
 
 	return pubtime[1]
 
 def dbcreate():
 	c = conn.cursor()
-	c.execute('''create table verycd2(
+	c.execute('''create table verycd(
 		verycdid integer primary key,
 		title text,
 		status text,
@@ -211,36 +254,47 @@ def dbcreate():
 		category1 text,
 		category2 text,
 		ed2k text,
-	)''')
-	c.execute('''create table verycd2c(
-		verycdid integer primary key,
-		content text,
+		content text
 	)''')
 	conn.commit()
 	c.close()
 
 def dbinsert(id,title,status,brief,pubtime,category,ed2k,content,conn):
 	c = conn.cursor()
-	c.execute('insert into verycd2 values(%s,"%s","%s","%s","%s","%s","%s","%s","%s")'%
-		(id,title,status,brief,pubtime[0],pubtime[1],category[0],category[1],\
-		ed2k))
-	c.execute('insert into verycd2c value(%s,"%s")'%(id,content))
+	tries = 0
+	while tries<10:
+		try:
+			c.execute('insert into verycd values(?,?,?,?,?,?,?,?,?,?)',\
+				(id,title,status,brief,pubtime[0],pubtime[1],category[0],category[1],\
+				ed2k,content))
+			break
+		except:
+			tries += 1
+			time.sleep(5)
+			continue
 	conn.commit()
 	c.close()
 
 def dbupdate(id,title,status,brief,pubtime,category,ed2k,content,conn):
+	tries = 0
 	c = conn.cursor()
-	c.execute('update verycd2 set verycdid=%s,title="%s",status="%s",brief="%s",pubtime="%s",updtime="%s",category1="%s",category2="%s",ed2k="%s"  where verycdid=%s'%\
-		(id,title,status,brief,pubtime[0],pubtime[1],category[0],category[1],\
-		ed2k,id))
-	c.execute('update verycd2c set verycdid=%s,content="%s" where verycdid=%s'%\
-		(id,content,id))
+	while tries<10:
+		try:
+			c.execute('update verycd set verycdid=?,title=?,status=?,brief=?,pubtime=?,\
+			updtime=?,category1=?,category2=?,ed2k=?,content=? where verycdid=?',\
+			(id,title,status,brief,pubtime[0],pubtime[1],category[0],category[1],\
+			ed2k,content,id))
+			break
+		except:
+			tries += 1
+			time.sleep(5)
+			continue
 	conn.commit()
 	c.close()
 
 def dbfind(id,conn):
 	c = conn.cursor()
-	c.execute('select 1 from verycd2 where verycdid=%s'%id)
+	c.execute('select 1 from verycd where verycdid=?',(id,))
 	c.close()
 	for x in c:
 		if 1 in x:
@@ -296,14 +350,18 @@ if __name__=='__main__':
 	elif len(sys.argv) == 3:
 		if sys.argv[1] != 'fetch':
 			usage()
-		elif '-' in sys.argv[2]:
-			fetchall(sys.argv[2])
 		elif '~' in sys.argv[2]:
 			m = sys.argv[2].split('~')
 			for i in range(int(m[0]),int(m[1])+1):
 				q.put(i)
 		elif sys.argv[2].startswith("q="):
 			search(sys.argv[2][2:])
+		elif sys.argv[2].startswith("n="):
+			normal(sys.argv[2][2:])
+		elif sys.argv[2].startswith("r="):
+			request(sys.argv[2][2:])
+		elif '-' in sys.argv[2]:
+			fetchall(sys.argv[2])
 		else:
 			fetch(int(sys.argv[2]),debug=True)
 

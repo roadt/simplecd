@@ -1,3 +1,6 @@
+function init(str){
+	checkAll(str,true);
+}
 function checkAll(str,checked) {
     var a = document.getElementsByName(str);
     var n = a.length;
@@ -9,7 +12,7 @@ function checkAll(str,checked) {
 }
 function em_size(str) {
     var a = document.getElementsByName(str);
-    var b = document.getElementsByName(str+'size');
+//    var b = document.getElementsByName(str+"size");
     var n = a.length;
     try {
         var input_checkall = document.getElementById("checkall_"+str);
@@ -18,7 +21,7 @@ function em_size(str) {
         for (var i=0; i < n; i++) {
             if (a[i].checked) {
                 var piecesArray = a[i].value.split( "|" );
-                b[i].innerHTML = gen_size(piecesArray[3]*1,3,1);
+//                b[i].innerHTML = gen_size(piecesArray[3]*1,3,1);
                 size += piecesArray[3]*1;
             } else {
                 input_checkall.checked = false;
@@ -62,6 +65,29 @@ function copy(str) {
         }
     }
     copyToClipboard(ed2kcopy);
+}
+function countlink(str){
+	var r = 0;
+	a = document.getElementsByName(str);
+	n = a.length;
+	for ( var i = 0; i < n; i++ ){
+		if ( a[i].checked) {
+			r += 1;
+		}
+	}
+	return r;
+}
+function copy2popup(str){
+	var a = document.getElementsByName(str);
+	var n = a.length;
+	var ed2kcopy = "";
+	for (var i = 0;i < n; i++) {
+		if (a[i].checked) {
+			ed2kcopy += a[i].value;
+			ed2kcopy += "<br>\n";
+		}
+	}
+	return ed2kcopy;
 }
 function copyToClipboard(txt) {
 	if(window.clipboardData) {
@@ -188,5 +214,23 @@ function download(str, i, first) {
 			}
 		}
 	}
-
+}
+function showPopup(txt,t,l,w,h){
+	var popUp = document.getElementById("popupcontent");
+ 
+	popUp.style.top = t + "px";
+	popUp.style.left = l + "px";
+	popUp.style.width = w + "px";
+	popUp.style.height = h + "px";
+ 
+	popUp.innerHTML = txt;// +
+//"<div id=\"statusbar\"><button onclick=\"hidePopup();\">关闭窗口<button></div>";
+ 
+//	var sbar = document.getElementById("statusbar");
+//	sbar.style.marginTop = (parseInt(h)-40) + "px";
+	popUp.style.visibility = "visible";
+}
+function hidePopup(){
+	var popUp = document.getElementById("popupcontent");
+	popUp.style.visibility = "hidden";
 }
